@@ -1,0 +1,1381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ahmed Dar — Odoo Developer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #0d1b2a;
+    --navy-mid: #162232;
+    --charcoal: #1e2d3d;
+    --charcoal-light: #2a3d52;
+    --beige: #f5f0e8;
+    --beige-mid: #ede8dc;
+    --beige-warm: #e8dfc9;
+    --gold: #c9a84c;
+    --gold-light: #d9bc72;
+    --gold-pale: #f0e4b8;
+    --white: #fdfcf9;
+    --text-dark: #0d1b2a;
+    --text-mid: #3a4d5c;
+    --text-light: #6b7d8e;
+    --transition: 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  [data-theme="dark"] {
+    --bg: var(--navy);
+    --bg-card: var(--charcoal);
+    --bg-subtle: var(--navy-mid);
+    --text-primary: var(--beige);
+    --text-secondary: #a8bcc8;
+    --text-muted: #6b8090;
+    --border: rgba(201, 168, 76, 0.15);
+    --border-hover: rgba(201, 168, 76, 0.4);
+    --card-shadow: 0 4px 32px rgba(0,0,0,0.4);
+  }
+
+  [data-theme="light"] {
+    --bg: var(--white);
+    --bg-card: #ffffff;
+    --bg-subtle: var(--beige);
+    --text-primary: var(--navy);
+    --text-secondary: var(--text-mid);
+    --text-muted: var(--text-light);
+    --border: rgba(13, 27, 42, 0.1);
+    --border-hover: rgba(201, 168, 76, 0.5);
+    --card-shadow: 0 4px 24px rgba(13,27,42,0.08);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text-primary);
+    transition: background var(--transition), color var(--transition);
+    overflow-x: hidden;
+    line-height: 1.7;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 1.2rem 3rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    background: rgba(13,27,42,0.7);
+    border-bottom: 1px solid rgba(201,168,76,0.1);
+    transition: all var(--transition);
+  }
+
+  [data-theme="light"] nav {
+    background: rgba(253,252,249,0.85);
+    border-bottom: 1px solid rgba(13,27,42,0.08);
+  }
+
+  .nav-logo {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--gold);
+    letter-spacing: 0.05em;
+    text-decoration: none;
+  }
+
+  .nav-links {
+    display: flex;
+    gap: 2rem;
+    list-style: none;
+    align-items: center;
+  }
+
+  .nav-links a {
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: color var(--transition);
+  }
+
+  .nav-links a:hover { color: var(--gold); }
+
+  .theme-btn {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    cursor: pointer;
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.9rem;
+    transition: all var(--transition);
+  }
+
+  .theme-btn:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+  }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    padding: 8rem 3rem 5rem;
+    overflow: hidden;
+  }
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, var(--navy) 0%, #0f2235 50%, #1a2e40 100%);
+  }
+
+  [data-theme="light"] .hero-bg {
+    background: linear-gradient(135deg, #f0ebe1 0%, var(--beige) 50%, #e8dfc9 100%);
+  }
+
+  .hero-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+
+  .hero-glow {
+    position: absolute;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(201,168,76,0.08) 0%, transparent 70%);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+
+  .hero-content {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    max-width: 800px;
+    animation: fadeUp 1s ease both;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 1.2rem;
+    border: 1px solid rgba(201,168,76,0.3);
+    border-radius: 100px;
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold-light);
+    margin-bottom: 2rem;
+    animation: fadeUp 1s 0.1s ease both;
+  }
+
+  .hero-badge-dot {
+    width: 6px; height: 6px;
+    background: var(--gold);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  .hero-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(3.5rem, 8vw, 6.5rem);
+    font-weight: 300;
+    line-height: 1.05;
+    color: var(--beige);
+    letter-spacing: -0.01em;
+    margin-bottom: 0.3rem;
+    animation: fadeUp 1s 0.2s ease both;
+  }
+
+  [data-theme="light"] .hero-name { color: var(--navy); }
+
+  .hero-name span {
+    color: var(--gold);
+    font-style: italic;
+    font-weight: 600;
+  }
+
+  .hero-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.85rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold-light);
+    margin-bottom: 2rem;
+    animation: fadeUp 1s 0.3s ease both;
+  }
+
+  .hero-summary {
+    font-size: 1.05rem;
+    font-weight: 300;
+    color: rgba(245,240,232,0.7);
+    max-width: 580px;
+    margin: 0 auto 3rem;
+    line-height: 1.8;
+    animation: fadeUp 1s 0.4s ease both;
+  }
+
+  [data-theme="light"] .hero-summary { color: var(--text-mid); }
+
+  .hero-btns {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    animation: fadeUp 1s 0.5s ease both;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.75rem 1.8rem;
+    border-radius: 4px;
+    font-size: 0.82rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all var(--transition);
+    border: none;
+  }
+
+  .btn-primary {
+    background: var(--gold);
+    color: var(--navy);
+  }
+
+  .btn-primary:hover {
+    background: var(--gold-light);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(201,168,76,0.3);
+  }
+
+  .btn-outline {
+    background: transparent;
+    color: var(--beige);
+    border: 1px solid rgba(245,240,232,0.25);
+  }
+
+  [data-theme="light"] .btn-outline {
+    color: var(--navy);
+    border: 1px solid rgba(13,27,42,0.2);
+  }
+
+  .btn-outline:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+    transform: translateY(-2px);
+  }
+
+  .scroll-hint {
+    position: absolute;
+    bottom: 2.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    color: rgba(245,240,232,0.3);
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    animation: fadeIn 2s 1s ease both;
+  }
+
+  .scroll-line {
+    width: 1px; height: 40px;
+    background: linear-gradient(to bottom, rgba(201,168,76,0.5), transparent);
+    animation: scrollDown 2s infinite;
+  }
+
+  /* ── SECTIONS ── */
+  section {
+    padding: 7rem 3rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    max-width: 60px;
+    height: 1px;
+    background: var(--gold);
+    opacity: 0.4;
+  }
+
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 300;
+    color: var(--text-primary);
+    line-height: 1.15;
+    margin-bottom: 3rem;
+  }
+
+  /* ── ABOUT ── */
+  .about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: center;
+  }
+
+  .about-text p {
+    font-size: 1rem;
+    font-weight: 300;
+    color: var(--text-secondary);
+    line-height: 1.9;
+    margin-bottom: 1.2rem;
+  }
+
+  .about-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+  }
+
+  .stat-card {
+    padding: 1.8rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    transition: all var(--transition);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 3px; height: 100%;
+    background: var(--gold);
+    transform: scaleY(0);
+    transition: transform var(--transition);
+  }
+
+  .stat-card:hover::before { transform: scaleY(1); }
+  .stat-card:hover {
+    border-color: var(--border-hover);
+    box-shadow: var(--card-shadow);
+    transform: translateY(-3px);
+  }
+
+  .stat-num {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 2.8rem;
+    font-weight: 600;
+    color: var(--gold);
+    line-height: 1;
+    margin-bottom: 0.4rem;
+  }
+
+  .stat-label {
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  /* ── SKILLS ── */
+  .skills-section { background: none; }
+
+  .skills-wrap {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+  }
+
+  .skill-group-title {
+    font-size: 0.78rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .skill-item {
+    margin-bottom: 1.2rem;
+  }
+
+  .skill-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+  }
+
+  .skill-name {
+    font-size: 0.88rem;
+    font-weight: 400;
+    color: var(--text-primary);
+  }
+
+  .skill-pct {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.75rem;
+    color: var(--gold);
+  }
+
+  .skill-track {
+    height: 3px;
+    background: var(--border);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .skill-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold), var(--gold-light));
+    border-radius: 2px;
+    width: 0;
+    transition: width 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+
+  .modules-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.7rem;
+  }
+
+  .module-tag {
+    padding: 0.45rem 1rem;
+    border: 1px solid var(--border);
+    border-radius: 100px;
+    font-size: 0.78rem;
+    font-weight: 400;
+    color: var(--text-secondary);
+    letter-spacing: 0.05em;
+    transition: all var(--transition);
+    cursor: default;
+  }
+
+  .module-tag:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+    background: rgba(201,168,76,0.06);
+  }
+
+  /* ── EXPERIENCE ── */
+  .exp-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 2.5rem;
+    position: relative;
+    overflow: hidden;
+    transition: all var(--transition);
+    box-shadow: var(--card-shadow);
+  }
+
+  .exp-card::after {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--gold), transparent);
+  }
+
+  .exp-card:hover {
+    border-color: var(--border-hover);
+    transform: translateY(-4px);
+    box-shadow: 0 16px 48px rgba(0,0,0,0.2);
+  }
+
+  [data-theme="light"] .exp-card:hover {
+    box-shadow: 0 16px 48px rgba(13,27,42,0.12);
+  }
+
+  .exp-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .exp-role {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.7rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    line-height: 1.2;
+  }
+
+  .exp-company {
+    font-size: 0.82rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-top: 0.3rem;
+  }
+
+  .exp-date {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    background: var(--bg-subtle);
+    padding: 0.4rem 0.9rem;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+    white-space: nowrap;
+  }
+
+  .exp-list {
+    list-style: none;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.8rem;
+  }
+
+  .exp-list li {
+    font-size: 0.88rem;
+    font-weight: 300;
+    color: var(--text-secondary);
+    padding-left: 1.2rem;
+    position: relative;
+    line-height: 1.6;
+  }
+
+  .exp-list li::before {
+    content: '◈';
+    position: absolute;
+    left: 0;
+    color: var(--gold);
+    font-size: 0.6rem;
+    top: 0.35em;
+  }
+
+  /* ── PROJECTS ── */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+  }
+
+  .project-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 2rem;
+    transition: all var(--transition);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .project-card::before {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--gold), var(--gold-light));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--transition);
+  }
+
+  .project-card:hover::before { transform: scaleX(1); }
+
+  .project-card:hover {
+    border-color: var(--border-hover);
+    transform: translateY(-5px);
+    box-shadow: var(--card-shadow);
+  }
+
+  .project-icon {
+    width: 44px; height: 44px;
+    background: rgba(201,168,76,0.1);
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.2rem;
+    margin-bottom: 1.2rem;
+  }
+
+  .project-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.3rem;
+  }
+
+  .project-type {
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 1rem;
+  }
+
+  .project-desc {
+    font-size: 0.88rem;
+    font-weight: 300;
+    color: var(--text-secondary);
+    line-height: 1.75;
+    margin-bottom: 1.2rem;
+  }
+
+  .project-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .project-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    background: var(--bg-subtle);
+    padding: 0.2rem 0.7rem;
+    border-radius: 3px;
+    letter-spacing: 0.05em;
+  }
+
+  /* ── ACHIEVEMENTS ── */
+  .achievements-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.5rem;
+  }
+
+  .ach-card {
+    padding: 1.8rem;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    transition: all var(--transition);
+    text-align: center;
+  }
+
+  .ach-card:hover {
+    border-color: var(--border-hover);
+    transform: translateY(-4px);
+    box-shadow: var(--card-shadow);
+  }
+
+  .ach-icon {
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
+    display: block;
+  }
+
+  .ach-title {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+    line-height: 1.4;
+  }
+
+  .ach-desc {
+    font-size: 0.8rem;
+    font-weight: 300;
+    color: var(--text-muted);
+    line-height: 1.7;
+  }
+
+  /* ── EDUCATION ── */
+  .edu-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    align-items: start;
+  }
+
+  .edu-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 2rem;
+    transition: all var(--transition);
+  }
+
+  .edu-card:hover {
+    border-color: var(--border-hover);
+    box-shadow: var(--card-shadow);
+  }
+
+  .edu-degree {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 0.4rem;
+    line-height: 1.25;
+  }
+
+  .edu-school {
+    font-size: 0.82rem;
+    font-weight: 400;
+    color: var(--text-secondary);
+    margin-bottom: 1rem;
+    line-height: 1.5;
+  }
+
+  .edu-meta {
+    display: flex;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+  }
+
+  .edu-badge {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    padding: 0.3rem 0.7rem;
+    border-radius: 3px;
+    letter-spacing: 0.06em;
+  }
+
+  .edu-badge-year {
+    background: var(--bg-subtle);
+    color: var(--text-muted);
+    border: 1px solid var(--border);
+  }
+
+  .edu-badge-grade {
+    background: rgba(201,168,76,0.1);
+    color: var(--gold);
+    border: 1px solid rgba(201,168,76,0.2);
+  }
+
+  .edu-project {
+    border-top: 1px solid var(--border);
+    padding-top: 1rem;
+    margin-top: 1rem;
+  }
+
+  .edu-project-label {
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.4rem;
+  }
+
+  .edu-project-name {
+    font-size: 0.9rem;
+    font-weight: 400;
+    color: var(--text-primary);
+  }
+
+  .edu-project-grade {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+  }
+
+  /* ── CONTACT ── */
+  .contact-section {
+    background: none;
+    text-align: center;
+  }
+
+  .contact-inner {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 4rem 3rem;
+    position: relative;
+    overflow: hidden;
+    max-width: 800px;
+    margin: 0 auto;
+  }
+
+  .contact-inner::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 10%; right: 10%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+
+  .contact-subtitle {
+    font-size: 0.88rem;
+    font-weight: 300;
+    color: var(--text-muted);
+    max-width: 420px;
+    margin: 0 auto 3rem;
+    line-height: 1.8;
+  }
+
+  .contact-grid {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .contact-item {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.8rem 1.4rem;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    font-weight: 400;
+    transition: all var(--transition);
+    background: var(--bg-subtle);
+  }
+
+  .contact-item:hover {
+    border-color: var(--gold);
+    color: var(--gold);
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(201,168,76,0.15);
+  }
+
+  .contact-icon {
+    font-size: 1rem;
+    opacity: 0.8;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    text-align: center;
+    padding: 2rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    letter-spacing: 0.1em;
+    border-top: 1px solid var(--border);
+  }
+
+  footer span { color: var(--gold); }
+
+  /* ── DIVIDER ── */
+  .section-divider {
+    max-width: 1100px;
+    margin: 0 auto;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border), transparent);
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.8); }
+  }
+
+  @keyframes scrollDown {
+    0% { transform: scaleY(0); transform-origin: top; }
+    50% { transform: scaleY(1); transform-origin: top; }
+    51% { transform: scaleY(1); transform-origin: bottom; }
+    100% { transform: scaleY(0); transform-origin: bottom; }
+  }
+
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 768px) {
+    nav { padding: 1rem 1.5rem; }
+    .nav-links { display: none; }
+    section { padding: 4rem 1.5rem; }
+    .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+    .skills-wrap { grid-template-columns: 1fr; }
+    .exp-list { grid-template-columns: 1fr; }
+    .projects-grid { grid-template-columns: 1fr; }
+    .achievements-grid { grid-template-columns: 1fr; }
+    .edu-layout { grid-template-columns: 1fr; }
+    .hero { padding: 7rem 1.5rem 4rem; }
+    .hero-name { font-size: 3rem; }
+    .contact-inner { padding: 2.5rem 1.5rem; }
+    .about-stats { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body data-theme="dark">
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">AD</a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <button class="theme-btn" id="themeBtn" aria-label="Toggle theme">☀</button>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+
+  <div class="hero-content">
+    <div class="hero-badge">
+      <span class="hero-badge-dot"></span>
+      Available for opportunities
+    </div>
+    <h1 class="hero-name">Ahmed <span>Dar</span></h1>
+    <p class="hero-title">Odoo Developer &nbsp;/&nbsp; ERP Specialist</p>
+    <p class="hero-summary">
+      Backend-focused ERP developer with hands-on experience in Odoo 17–19, Python ORM, and XML customization — bridging complex business requirements with clean, efficient technical solutions.
+    </p>
+    <div class="hero-btns">
+      <a href="mailto:ahmeddar384@gmail.com" class="btn btn-primary">✉ Get in Touch</a>
+      <a href="https://linkedin.com/in/ahmed-dar-835926311" target="_blank" class="btn btn-outline">LinkedIn</a>
+      <a href="https://github.com/ahmeddar11" target="_blank" class="btn btn-outline">GitHub</a>
+    </div>
+  </div>
+
+  <div class="scroll-hint">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-label">01 — About</div>
+  <div class="about-grid">
+    <div class="about-text reveal">
+      <h2 class="section-title">Solving ERP Complexity<br>with Precision</h2>
+      <p>
+        I'm a recent graduate turned hands-on Odoo developer, working at the intersection of business logic and technical implementation. My focus is on delivering tailored ERP solutions that genuinely fit real-world workflows.
+      </p>
+      <p>
+        From debugging tricky ORM behaviors to architecting custom modules from scratch, I thrive in environments where the technical challenge and the business impact are both significant. I've worked across Sales, Inventory, Accounting, CRM, and HR modules — always aiming for clean, maintainable code.
+      </p>
+    </div>
+    <div class="about-stats reveal">
+      <div class="stat-card">
+        <div class="stat-num">3</div>
+        <div class="stat-label">Odoo Versions</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">2+</div>
+        <div class="stat-label">Live Projects</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">6+</div>
+        <div class="stat-label">Core Modules</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">9</div>
+        <div class="stat-label">Team Led</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- SKILLS -->
+<section id="skills">
+  <div class="section-label">02 — Skills</div>
+  <h2 class="section-title">Technical Expertise</h2>
+
+  <div class="skills-wrap">
+    <div class="reveal">
+      <div class="skill-group-title">Core Technical Skills</div>
+
+      <div class="skill-item">
+        <div class="skill-header">
+          <span class="skill-name">Python / Odoo ORM</span>
+          <span class="skill-pct">88%</span>
+        </div>
+        <div class="skill-track"><div class="skill-fill" data-width="88"></div></div>
+      </div>
+
+      <div class="skill-item">
+        <div class="skill-header">
+          <span class="skill-name">XML / QWeb Views</span>
+          <span class="skill-pct">85%</span>
+        </div>
+        <div class="skill-track"><div class="skill-fill" data-width="85"></div></div>
+      </div>
+
+      <div class="skill-item">
+        <div class="skill-header">
+          <span class="skill-name">Odoo Module Development</span>
+          <span class="skill-pct">87%</span>
+        </div>
+        <div class="skill-track"><div class="skill-fill" data-width="87"></div></div>
+      </div>
+
+      <div class="skill-item">
+        <div class="skill-header">
+          <span class="skill-name">PostgreSQL</span>
+          <span class="skill-pct">65%</span>
+        </div>
+        <div class="skill-track"><div class="skill-fill" data-width="65"></div></div>
+      </div>
+
+      <div class="skill-item">
+        <div class="skill-header">
+          <span class="skill-name">API Integration</span>
+          <span class="skill-pct">70%</span>
+        </div>
+        <div class="skill-track"><div class="skill-fill" data-width="70"></div></div>
+      </div>
+
+      <div class="skill-item">
+        <div class="skill-header">
+          <span class="skill-name">Debugging & System Analysis</span>
+          <span class="skill-pct">82%</span>
+        </div>
+        <div class="skill-track"><div class="skill-fill" data-width="82"></div></div>
+      </div>
+    </div>
+
+    <div class="reveal">
+      <div class="skill-group-title">Odoo Functional Modules</div>
+      <div class="modules-grid">
+        <span class="module-tag">Sales</span>
+        <span class="module-tag">Inventory</span>
+        <span class="module-tag">Purchase</span>
+        <span class="module-tag">Accounting</span>
+        <span class="module-tag">CRM</span>
+        <span class="module-tag">HR</span>
+        <span class="module-tag">Manufacturing</span>
+        <span class="module-tag">QWeb Reports</span>
+        <span class="module-tag">ORM Customization</span>
+        <span class="module-tag">Workflows</span>
+        <span class="module-tag">Security Groups</span>
+        <span class="module-tag">Data Models</span>
+        <span class="module-tag">UAT Testing</span>
+        <span class="module-tag">User Support</span>
+      </div>
+
+      <div class="skill-group-title" style="margin-top:2.5rem;">Versions & Environment</div>
+      <div class="modules-grid">
+        <span class="module-tag">Odoo 17</span>
+        <span class="module-tag">Odoo 18</span>
+        <span class="module-tag">Odoo 19</span>
+        <span class="module-tag">Git / GitHub</span>
+        <span class="module-tag">Linux</span>
+        <span class="module-tag">VS Code</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- EXPERIENCE -->
+<section id="experience">
+  <div class="section-label">03 — Experience</div>
+  <h2 class="section-title">Work History</h2>
+
+  <div class="exp-card reveal">
+    <div class="exp-header">
+      <div>
+        <div class="exp-role">Odoo Developer &<br>Functional Support</div>
+        <div class="exp-company">⟡ Top Genius</div>
+      </div>
+      <div class="exp-date">Aug 2024 — Present</div>
+    </div>
+    <ul class="exp-list">
+      <li>Developed and customized Odoo modules using Python and XML to meet real business requirements</li>
+      <li>Extended ERP functionality across Sales, Inventory, Purchase, Accounting, CRM, and HR</li>
+      <li>Debugged and resolved technical issues in existing modules, improving system stability</li>
+      <li>Supported end-users by analyzing reported issues and delivering targeted technical fixes</li>
+      <li>Participated in UAT testing cycles, identifying and resolving bugs before production release</li>
+      <li>Improved workflows through automation logic and backend enhancements</li>
+      <li>Worked with data models, ORM customization, and business logic adjustments</li>
+      <li>Improved data import templates, reducing errors and increasing data consistency</li>
+    </ul>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- PROJECTS -->
+<section id="projects">
+  <div class="section-label">04 — Projects</div>
+  <h2 class="section-title">Featured Work</h2>
+
+  <div class="projects-grid">
+    <div class="project-card reveal">
+      <div class="project-icon">🥇</div>
+      <div class="project-name">Dar Gold</div>
+      <div class="project-type">Graduation Project · E-Commerce</div>
+      <p class="project-desc">
+        An e-commerce platform for gold trading built as a graduation project. Led a 9-person team to design and implement a complete online store handling product listings, gold pricing, cart management, and order workflows for gold items. Awarded Excellent grade.
+      </p>
+      <div class="project-tags">
+        <span class="project-tag">E-Commerce</span>
+        <span class="project-tag">Team Lead</span>
+        <span class="project-tag">Gold Trading</span>
+        <span class="project-tag">Grade: Excellent</span>
+      </div>
+    </div>
+
+    <div class="project-card reveal">
+      <div class="project-icon">⚙️</div>
+      <div class="project-name">Gold Business ERP</div>
+      <div class="project-type">Custom Odoo ERP · Gold Industry</div>
+      <p class="project-desc">
+        Full custom Odoo ERP for a gold trading business — managing sales, purchases, serial tracking, weight/karat pricing, stamping calculations, and financial operations. Custom models and views with barcode scanning, repair workflows, and Arabic UI support.
+      </p>
+      <div class="project-tags">
+        <span class="project-tag">Odoo 17</span>
+        <span class="project-tag">Python</span>
+        <span class="project-tag">XML/QWeb</span>
+        <span class="project-tag">Custom ORM</span>
+        <span class="project-tag">Accounting</span>
+      </div>
+    </div>
+
+    <div class="project-card reveal">
+      <div class="project-icon">🏛️</div>
+      <div class="project-name">Misrata Free Zone</div>
+      <div class="project-type">ERP Support & Enhancement · Libya</div>
+      <p class="project-desc">
+        Ongoing developer and support engineer role on a Free Zone ERP system in Libya. Handles maintenance, troubleshooting, and system enhancements — debugging issues, modifying modules, and implementing business-driven improvements for stable daily operations.
+      </p>
+      <div class="project-tags">
+        <span class="project-tag">Odoo ERP</span>
+        <span class="project-tag">Debugging</span>
+        <span class="project-tag">Module Mods</span>
+        <span class="project-tag">Ongoing</span>
+      </div>
+    </div>
+
+    <div class="project-card reveal">
+      <div class="project-icon">📚</div>
+      <div class="project-name">Custom Odoo Modules</div>
+      <div class="project-type">Personal Projects · Open Source</div>
+      <p class="project-desc">
+        Built several custom Odoo modules: a library management system with API integration and security groups, a multi-level sale order approval workflow, a partial payments/installment tracker, and an Excel export wizard — all production-oriented with clean architecture.
+      </p>
+      <div class="project-tags">
+        <span class="project-tag">Library Module</span>
+        <span class="project-tag">Approvals</span>
+        <span class="project-tag">Installments</span>
+        <span class="project-tag">Excel Export</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- ACHIEVEMENTS -->
+<section id="achievements">
+  <div class="section-label">05 — Achievements</div>
+  <h2 class="section-title">Key Accomplishments</h2>
+
+  <div class="achievements-grid">
+    <div class="ach-card reveal">
+      <span class="ach-icon">🔍</span>
+      <div class="ach-title">System Stability</div>
+      <p class="ach-desc">Debugged and resolved critical issues in live Odoo environments, improving overall system reliability before and after release</p>
+    </div>
+    <div class="ach-card reveal">
+      <span class="ach-icon">⚡</span>
+      <div class="ach-title">Workflow Optimization</div>
+      <p class="ach-desc">Implemented technical improvements and performance optimizations in Odoo modules, enhancing operational efficiency</p>
+    </div>
+    <div class="ach-card reveal">
+      <span class="ach-icon">📊</span>
+      <div class="ach-title">Data Quality</div>
+      <p class="ach-desc">Improved data import logic and templates, reducing import errors and increasing data consistency during testing cycles</p>
+    </div>
+    <div class="ach-card reveal">
+      <span class="ach-icon">👥</span>
+      <div class="ach-title">Team Leadership</div>
+      <p class="ach-desc">Led a 9-person team on the Dar Gold graduation project, coordinating development and delivering an Excellent-graded result</p>
+    </div>
+    <div class="ach-card reveal">
+      <span class="ach-icon">🎯</span>
+      <div class="ach-title">User Support</div>
+      <p class="ach-desc">Supported end-users throughout system usage and testing phases by analyzing and resolving technical issues under real-world conditions</p>
+    </div>
+    <div class="ach-card reveal">
+      <span class="ach-icon">🚀</span>
+      <div class="ach-title">Real Deployments</div>
+      <p class="ach-desc">Contributed to deploying and enhancing Odoo modules in actual project environments through hands-on development and configuration</p>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- EDUCATION & LEADERSHIP -->
+<section id="education">
+  <div class="section-label">06 — Education</div>
+  <h2 class="section-title">Background</h2>
+
+  <div class="edu-layout">
+    <div class="edu-card reveal">
+      <div class="edu-degree">Bachelor's in Management<br>& Accounting</div>
+      <div class="edu-school">Egyptian Institute of Alexandria Academy for Management and Accounting</div>
+      <div class="edu-meta">
+        <span class="edu-badge edu-badge-year">2020 – 2024</span>
+        <span class="edu-badge edu-badge-grade">Grade: Good</span>
+      </div>
+      <div class="edu-project">
+        <div class="edu-project-label">Graduation Project</div>
+        <div class="edu-project-name">Dar Gold — E-Commerce Platform for Gold Trading</div>
+        <div class="edu-project-grade">Grade: Excellent &nbsp;·&nbsp; Led team of 9</div>
+      </div>
+    </div>
+
+    <div class="edu-card reveal">
+      <div class="edu-degree">Leadership &<br>Professional Profile</div>
+      <div style="height:0.5rem;"></div>
+      <ul style="list-style:none; padding:0;">
+        <li style="font-size:0.88rem; font-weight:300; color:var(--text-secondary); padding:0.7rem 0; border-bottom:1px solid var(--border); display:flex; align-items:flex-start; gap:0.8rem;">
+          <span style="color:var(--gold);">◈</span> Led a 9-student team during the Dar Gold graduation project — managing coordination, task delegation, and delivery
+        </li>
+        <li style="font-size:0.88rem; font-weight:300; color:var(--text-secondary); padding:0.7rem 0; border-bottom:1px solid var(--border); display:flex; align-items:flex-start; gap:0.8rem;">
+          <span style="color:var(--gold);">◈</span> Organized and participated in academic workshops and group programming projects
+        </li>
+        <li style="font-size:0.88rem; font-weight:300; color:var(--text-secondary); padding:0.7rem 0; border-bottom:1px solid var(--border); display:flex; align-items:flex-start; gap:0.8rem;">
+          <span style="color:var(--gold);">◈</span> Comfortable handling client-facing tasks, documentation, and cross-functional team collaboration
+        </li>
+        <li style="font-size:0.88rem; font-weight:300; color:var(--text-secondary); padding:0.7rem 0; display:flex; align-items:flex-start; gap:0.8rem;">
+          <span style="color:var(--gold);">◈</span> Available for remote or onsite engagements — adaptable to fast-paced project requirements
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<div class="section-divider"></div>
+
+<!-- CONTACT -->
+<section id="contact" class="contact-section">
+  <div class="section-label" style="justify-content:center;">07 — Contact</div>
+  <div class="contact-inner reveal">
+    <h2 class="section-title" style="margin-bottom:1rem;">Let's Build Something</h2>
+    <p class="contact-subtitle">Open to Odoo development roles, ERP consulting projects, and freelance opportunities. Let's connect.</p>
+    <div class="contact-grid">
+      <a href="mailto:ahmeddar384@gmail.com" class="contact-item">
+        <span class="contact-icon">✉</span> ahmeddar384@gmail.com
+      </a>
+      <a href="tel:01286605199" class="contact-item">
+        <span class="contact-icon">📞</span> 012 866 05199
+      </a>
+      <a href="https://linkedin.com/in/ahmed-dar-835926311" target="_blank" class="contact-item">
+        <span class="contact-icon">💼</span> linkedin.com/in/ahmed-dar
+      </a>
+      <a href="https://github.com/ahmeddar11" target="_blank" class="contact-item">
+        <span class="contact-icon">🐙</span> github.com/ahmeddar11
+      </a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <span>Ahmed Dar</span> &nbsp;·&nbsp; Odoo Developer &nbsp;·&nbsp; Egypt &nbsp;·&nbsp; <span>2025</span>
+</footer>
+
+<script>
+  // Theme toggle
+  const btn = document.getElementById('themeBtn');
+  const body = document.body;
+  btn.addEventListener('click', () => {
+    const isDark = body.dataset.theme === 'dark';
+    body.dataset.theme = isDark ? 'light' : 'dark';
+    btn.textContent = isDark ? '☾' : '☀';
+  });
+
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => {
+          entry.target.classList.add('visible');
+        }, (entry.target.dataset.delay || 0) * 100);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+
+  reveals.forEach((el, i) => {
+    el.dataset.delay = i % 3;
+    observer.observe(el);
+  });
+
+  // Skill bars animation
+  const skillObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.querySelectorAll('.skill-fill').forEach(fill => {
+          const w = fill.dataset.width;
+          setTimeout(() => { fill.style.width = w + '%'; }, 200);
+        });
+        skillObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.3 });
+
+  document.querySelectorAll('.skills-wrap').forEach(el => skillObserver.observe(el));
+</script>
+</body>
+</html>
